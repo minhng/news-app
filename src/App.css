@@ -1,38 +1,252 @@
-.App {
+.header {
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@media (min-width: 768px) { 
+  .horizontal-card {
+    cursor: pointer;
+    margin-bottom: 30px !important;
+    flex-direction: row !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  } 
+  .mid-card {
+    max-width: 17rem;
   }
+  .img-body {
+    max-width: 14em !important;
+    min-width: 14em !important;
+    /* height: 10em !important;   */
+  }
+  .rightmost-navbar {
+    width: inherit;
+  }
+  .column-card {
+    max-width: 23%!important;
+    margin: .5rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+  .small-thumbnail {
+    /* max-height: 12rem!important; */
+    width: 100%;
+    display: flex;
+    margin: auto!important;
+  }
+  .icons-detailed {
+    display: flex;
+    width: 20%;
+    justify-content: space-around;
+    margin-bottom: .5rem;
+  }
+  .loading-detailed {
+    left: 50%;
+    top: 50%;
+    position: absolute;
+  }
+} 
+@media (max-width: 767px) { 
+  .horizontal-card {
+    cursor: pointer;
+    margin-bottom: 30px !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+  .mid-card {
+    max-width: 25rem;
+  }
+  .card-body {
+    flex: 1 1 auto !important;
+    min-height: 1px !important;
+    padding: .25rem !important;
+  } 
+  .img-body {
+    margin: auto!important;
+    margin-top: 1rem!important;
+    width: 95%;
+    display: flex;
+    /* max-height: 12em !important;   */
+  }
+  .rightmost-navbar {
+    width: 20%!important;
+  }
+  .small-thumbnail {
+    /* max-height: 12rem!important; */
+    width: 95% !important;
+    display: flex;
+    margin: auto!important;
+  }
+  .row {
+    margin: auto!important;
+  }
+  .top-card {
+    margin: auto;
+    padding: 0 1rem;
+    padding-top: 1rem;
+  }
+  .icons-detailed {
+    display: flex;
+    width: 40%;
+    justify-content: space-around;
+    margin-bottom: .5rem;
+  }
+  .loading-detailed {
+    display: none;
+  }
+} 
+.color-navbar {
+  background-color: #0e3b69!important;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.horizontal-carddeck {
+  margin-top: 20px !important;
+  flex-direction: column !important;
+}
+.column-card {
+  /* margin: .5rem; */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px !important;
+}
+.title-card {
+  font-style: italic;
+}
+.body-card {
+  max-height: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bottom-card {
+  padding: 1rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  margin: auto;
+  /* width: 95%; */
+}
+.Toastify__toast--default {
+  color: black !important;
+}
+.default-badge {
+  font-weight: bold;
+  text-transform: uppercase;
+  max-height: 25px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #6c757d;
+}
+.business {
+  font-weight: bold;
+  text-transform: uppercase;
+  max-height: 25px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #007bff;
+}
+.health {
+  font-weight: bold;
+  text-transform: uppercase;
+  max-height: 25px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #6c757d;
+}
+.sport, 
+.sports {
+  font-weight: bold;
+  text-transform: uppercase;
+  max-height: 25px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: #212529;
+  background-color: #ffc107;
+}
+.politics {
+  font-weight: bold;
+  text-transform: uppercase;
+  max-height: 25px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #2f866aeb;
+}
+.world {
+  font-weight: bold;
+  text-transform: uppercase;
+  max-height: 25px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #673ab7;
+}
+.technology {
+  font-weight: bold;
+  text-transform: uppercase;
+  max-height: 25px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: #212529;
+  background-color: #aab916;
+}
+.guardian {
+  font-weight: bold;
+  text-transform: uppercase;
+  max-height: 25px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #092746;
+}
+.nytimes {
+  font-weight: bold;
+  text-transform: uppercase;
+  max-height: 25px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: #212529;
+  background-color: #9e9e9e94;
+}
+.switch-visible {
+  display: inline-block;
+}
+.switch-hidden {
+  display: none;
+}
+.header-modal{
+  line-height: 1 !important;
+}
+.share-title-modal {
+  width: 100%;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
-
-.App-link {
-  color: #61dafb;
+.share-icon-modal {
+  display: flex;
+  justify-content: space-around;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.link-card {
+  cursor: pointer;
+}
+.spinner-detailed {
+  margin-left: 10px;
+}
+.subtitle-detailed {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.full-detailed {
+  max-height: initial;
+  transition: all 0.5s ease-in-out;
+}
+.short-detailed {
+  max-height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.5s ease-in-out;
+}
+.commentbox {
+  margin: 10px;
+}
+.prompt {
+  border-radius: .5rem !important;
+}
+.react-switch {
+  margin: 0 10px;
 }
