@@ -36,22 +36,22 @@ class Detailed extends React.Component {
             isBookmarked: false,
             source: localStorage.getItem('detailed_source') 
         };
-        this.fullToggle = this.fullToggle.bind(this);
-        this.bookmark = this.bookmark.bind(this);
-        this.callApi = this.callApi.bind(this);
         this.myRef = React.createRef();
     }
 
     async callApi() {
-        const values = queryString.parse(this.props.location.search)
+        const values = queryString.parse(this.props.location.search);
+        this.setState({
+            isLoading: true
+        });
         if (this.state.source==='guardian') {
             try {
-                const results = await Promise.all([
-                    await fetch('https://newsapp-backend-2020.wl.r.appspot.com/article?id=' + values.id + '&source=guardian').then((response) => {
-                        return response.json();
-                    })
-                ]);
-                return results
+                const response = await fetch('https://newsapp-backend-2020.wl.r.appspot.com/article?id=' + values.id + '&source=guardian');
+                const res = await response.json();
+                this.setState({
+                    apiResponse: res.response.content,
+                    isLoading: false
+                })
             } catch (error) {
                 this.setState({
                     error
@@ -59,12 +59,12 @@ class Detailed extends React.Component {
             }
         } else {
             try {
-                const results = await Promise.all([
-                    await fetch('https://newsapp-backend-2020.wl.r.appspot.com/article?id=' + values.id + '&source=nytimes').then((response) => {
-                        return response.json();
-                    })
-                ]);
-                return results
+                const response = await fetch('https://newsapp-backend-2020.wl.r.appspot.com/article?id=' + values.id + '&source=nytimes'); 
+                const res = await response.json();
+                this.setState({
+                    apiResponse: res.response.docs[0],
+                    isLoading: false
+                })
             } catch (error) {
                 this.setState({
                     error
@@ -73,40 +73,20 @@ class Detailed extends React.Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.props.handleSwitchOff(this.props.location.pathname);
-        this.setState({
-            isLoading: true
-        })
-        const results = await this.callApi();
-        try {
-            if (this.state.source==='guardian') {
-                this.setState({
-                    apiResponse: results[0].response.content,
-                    isLoading: false
-                })
-            } else {
-                this.setState({
-                    apiResponse: results[0].response.docs[0],
-                    isLoading: false
-                })
-            }
-        } catch (error) {
-            this.setState({
-                error
-            });
-        }
+        this.callApi();
         this.removeCommentBox = commentBox('5669103704473600-proj');
-        await this.bookmarked();
+        this.bookmarked();
     }
 
-    fullToggle(ref) {
+    fullToggle = (ref) => {
         const currentState = this.state.isFullDescription;
         this.setState({ isFullDescription: !currentState });
         ref.current.scrollIntoView({behavior: 'smooth'})
     }
 
-    bookmark() {
+    bookmark = () => {
         // Put the object into storage
         let oldItems = JSON.parse(localStorage.getItem('items')) || [];
         oldItems.push(this.state.apiResponse);
@@ -116,7 +96,7 @@ class Detailed extends React.Component {
 
     }
 
-    removeBookmark() {
+    removeBookmark = () => {
         // Put the object into storage
         let currentItems = JSON.parse(localStorage.getItem('items')) || [];
         if (this.state.source==='guardian') {
@@ -131,7 +111,7 @@ class Detailed extends React.Component {
 
     }
 
-    bookmarked() {
+    bookmarked = () => {
         let oldItems = JSON.parse(localStorage.getItem('items')) || [];
         if (this.state.source==='guardian') {
             for (let val of oldItems) {
@@ -208,8 +188,8 @@ class Detailed extends React.Component {
                                             }>
                                             <div className='bookmark-detailed'>
                                                 {this.state.isBookmarked ?
-                                                    <FontAwesomeIcon onClick={() => this.removeBookmark()} style={{ cursor: 'pointer', color: 'tomato' }} icon={faBookmarked} size='2x' /> :
-                                                    <FontAwesomeIcon onClick={() => this.bookmark()} style={{ cursor: 'pointer', color: 'tomato' }} icon={faBookmark} size='2x' />
+                                                    <FontAwesomeIcon onClick={this.removeBookmark} style={{ cursor: 'pointer', color: 'tomato' }} icon={faBookmarked} size='2x' /> :
+                                                    <FontAwesomeIcon onClick={this.bookmark} style={{ cursor: 'pointer', color: 'tomato' }} icon={faBookmark} size='2x' />
                                                 }
                                             </div>
                                         </OverlayTrigger>
@@ -221,8 +201,8 @@ class Detailed extends React.Component {
                                     {this.state.apiResponse.blocks?.body[0]?.bodyTextSummary}
                                 </Card.Text>
                                 {this.state.isFullDescription ?
-                                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }} onClick={() => this.fullToggle(this.myRef)}><FontAwesomeIcon icon={faAngleUp} /> </div> :
-                                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }} onClick={() => this.fullToggle(this.myRef)}><FontAwesomeIcon icon={faAngleDown} /> </div>
+                                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }} onClick={this.fullToggle.bind(this, this.myRef)}><FontAwesomeIcon icon={faAngleUp} /> </div> :
+                                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }} onClick={this.fullToggle.bind(this, this.myRef)}><FontAwesomeIcon icon={faAngleDown} /> </div>
                                 }
                             </Container>
                         </Card.Body>
@@ -286,8 +266,8 @@ class Detailed extends React.Component {
                                         }>
                                         <div className='bookmark-detailed'>
                                             {this.state.isBookmarked ?
-                                                <FontAwesomeIcon onClick={() => this.removeBookmark()} style={{ cursor: 'pointer', color: 'tomato' }} icon={faBookmarked} size='2x' /> :
-                                                <FontAwesomeIcon onClick={() => this.bookmark()} style={{ cursor: 'pointer', color: 'tomato' }} icon={faBookmark} size='2x' />
+                                                <FontAwesomeIcon onClick={this.removeBookmark} style={{ cursor: 'pointer', color: 'tomato' }} icon={faBookmarked} size='2x' /> :
+                                                <FontAwesomeIcon onClick={this.bookmark} style={{ cursor: 'pointer', color: 'tomato' }} icon={faBookmark} size='2x' />
                                             }
                                         </div>
                                     </OverlayTrigger>

@@ -32,19 +32,15 @@ class Favorites extends React.Component {
             show: false,
             obj: {}
         };
-        // This binding is necessary to make `this` work in the callback
-        this.callApi = this.callApi.bind(this);
-        this.handleShow = this.handleShow.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.removeBookmark = this.removeBookmark.bind(this);
     }
-
 
     callApi() {
         try {
             const results = localStorage.getItem('items');
-            return results;
+            this.setState({
+                apiResults: [...this.state.apiResults, ...JSON.parse(results)],
+                isLoading: false
+            });
         } catch (error) {
             this.setState({
                 error
@@ -52,13 +48,9 @@ class Favorites extends React.Component {
         }
     }
 
-    async componentDidMount() {
-        const results = await this.callApi();
+    componentDidMount() {
         this.props.handleSwitchOff(this.props.location.pathname);
-        this.setState({
-            apiResults: [...this.state.apiResults, ...JSON.parse(results)],
-            isLoading: false
-        });
+        this.callApi();
     }
 
     handleShow = (item) => (e) => {
@@ -80,10 +72,10 @@ class Favorites extends React.Component {
         })
     }
 
-    handleClose() {
-        this.setState(state => ({
+    handleClose = () => {
+        this.setState({
             show: false
-        }));
+        });
     }
 
     removeBookmark = (item) => (e) => {

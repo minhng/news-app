@@ -29,21 +29,20 @@ class Home extends React.Component {
             obj: {},
             isLoading: true
         };
-        // This binding is necessary to make `this` work in the callback
-        this.handleClose = this.handleClose.bind(this);
-        this.handleShow = this.handleShow.bind(this);
-        this.callApi = this.callApi.bind(this);
     }
 
     async callApi() {
+        this.setState({
+            isLoading: true
+        });
         if (this.props.checked) {
             try {
-                const results = await Promise.all([
-                    await fetch('https://newsapp-backend-2020.wl.r.appspot.com/guardianHome').then((response) => {
-                        return response.json();
-                    })
-                ]);
-                return results
+                const response = await fetch('https://newsapp-backend-2020.wl.r.appspot.com/guardianHome');
+                const res = await response.json();
+                this.setState({
+                    apiResponse: [...this.state.apiResponse, ...res.response.results],
+                    isLoading: false
+                })
             } catch (error) {
                 this.setState({
                     error
@@ -51,12 +50,13 @@ class Home extends React.Component {
             }
         } else {
             try {
-                const results = await Promise.all([
-                    await fetch('https://newsapp-backend-2020.wl.r.appspot.com/nyHome').then((response) => {
-                        return response.json();
-                    })
-                ]);
-                return results
+                const response = await fetch('https://newsapp-backend-2020.wl.r.appspot.com/nyHome');
+                const res = await response.json();
+                this.setState({
+                    apiResponse: [...this.state.apiResponse, ...res.results],
+                    isLoading: false
+                })
+                return res;
             } catch (error) {
                 this.setState({
                     error
@@ -65,35 +65,15 @@ class Home extends React.Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.props.handleSwitchOn(this.props.location.pathname);
-        const results = await this.callApi();
-        this.setState({
-            isLoading: true
-        })
-        try {
-            if (this.props.checked) {
-                this.setState({
-                    apiResponse: [...this.state.apiResponse, ...results[0].response.results],
-                    isLoading: false
-                })
-            } else {
-                this.setState({
-                    apiResponse: [...this.state.apiResponse, ...results[0].results],
-                    isLoading: false
-                })
-            }
-        } catch (error) {
-            this.setState({
-                error
-            });
-        }
+        this.callApi();
     }
 
-    handleClose() {
-        this.setState(state => ({
+    handleClose = () => {
+        this.setState({
             show: false
-        }));
+        });
     }
 
     handleShow = (item) => (e) => {
@@ -173,7 +153,7 @@ class Home extends React.Component {
                         let url = item?.multimedia ? item?.multimedia[0]?.url : 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
                         let section;
                         if (item.section.toLowerCase() !== 'business' && item.section.toLowerCase() !== 'technology' && item.section.toLowerCase() !== 'health' && item.section.toLowerCase() !== 'sports' && item.section.toLowerCase() !== 'politics' && item.section.toLowerCase() !== 'world') {
-                            section = 'default-badge'; 
+                            section = 'default-badge';
                         }
                         return <Card key={i} onClick={this.handleClick(item)} className='horizontal-card'>
                             <Card.Body className="mid-card">

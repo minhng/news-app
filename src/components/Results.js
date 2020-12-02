@@ -32,23 +32,18 @@ class Results extends React.Component {
             isBookmarked: false,
             obj: {}
         };
-        // This binding is necessary to make `this` work in the callback
-        this.callApi = this.callApi.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleShow = this.handleShow.bind(this);
-        this.handleClick = this.handleClick.bind(this);
     }
 
     async callApi() {
         const values = queryString.parse(this.props.location.search)
         if (this.props.checked) {
             try {
-                const results = Promise.all([
-                    fetch('https://newsapp-backend-2020.wl.r.appspot.com/guardianSearch?q=' + values.q).then((response) => {
-                        return response.json();
-                    })
-                ]);
-                return results
+                const response = await fetch('https://newsapp-backend-2020.wl.r.appspot.com/guardianSearch?q=' + values.q);
+                const res = await response.json();
+                this.setState({
+                    apiResults: res.response.results,
+                    isLoading: false
+                })
             } catch (error) {
                 this.setState({
                     error
@@ -56,12 +51,12 @@ class Results extends React.Component {
             }
         } else {
             try {
-                const results = await Promise.all([
-                    await fetch('https://newsapp-backend-2020.wl.r.appspot.com/nySearch?q=' + values.q).then((response) => {
-                        return response.json();
-                    })
-                ]);
-                return results
+                const response = await fetch('https://newsapp-backend-2020.wl.r.appspot.com/nySearch?q=' + values.q);
+                const res = await response.json();
+                this.setState({
+                    apiResults: res.response.docs,
+                    isLoading: false
+                })
             } catch (error) {
                 this.setState({
                     error
@@ -70,35 +65,12 @@ class Results extends React.Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.props.handleSwitchOff(this.props.location.pathname);
-        const results = await this.callApi();
-        try {
-            if (this.props.checked) {
-                this.setState({
-                    apiResults: results[0].response.results,
-                    isLoading: false
-                })
-            } else {
-                this.setState({
-                    apiResults: results[0].response.docs,
-                    isLoading: false
-                })
-            }
-        } catch (error) {
-            this.setState({
-                error
-            });
-        }
-    }
-
-    componentWillUnmount() {
         this.callApi();
-        this.handleClose();
-        this.handleShow();
     }
 
-    handleClose() {
+    handleClose = () => {
         this.setState(state => ({
             show: false
         }));

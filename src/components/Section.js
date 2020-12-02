@@ -30,26 +30,24 @@ class Section extends React.Component {
             obj: {},
             isLoading: true
         };
-        // This binding is necessary to make `this` work in the callback
-        this.handleClose = this.handleClose.bind(this);
-        this.handleShow = this.handleShow.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-        this.callApi = this.callApi.bind(this);
     }
 
     async callApi() {
-        var pathName = this.props.location.pathname.substr(1, );
+        var pathName = this.props.location.pathname.substr(1);
         if (pathName === 'Sports' && this.props.checked) {
             pathName = 'Sport'
         }
+        this.setState({
+            isLoading: true
+        });
         if (this.props.checked) {
             try {
-                const results = await Promise.all([
-                    await fetch('https://newsapp-backend-2020.wl.r.appspot.com/guardianSection/' + pathName.toLowerCase()).then((response) => {
-                        return response.json();
-                    })
-                ]);
-                return results
+                const response = await fetch('https://newsapp-backend-2020.wl.r.appspot.com/guardianSection/' + pathName.toLowerCase());
+                const res = await response.json();
+                this.setState({
+                    apiResponse: [...this.state.apiResponse, ...res.response.results],
+                    isLoading: false
+                })
             } catch (error) {
                 this.setState({
                     error
@@ -57,12 +55,12 @@ class Section extends React.Component {
             }
         } else {
             try {
-                const results = await Promise.all([
-                    await fetch('https://newsapp-backend-2020.wl.r.appspot.com/nySection/' + pathName.toLowerCase()).then((response) => {
-                        return response.json();
-                    })
-                ]);
-                return results
+                const response = await fetch('https://newsapp-backend-2020.wl.r.appspot.com/nySection/' + pathName.toLowerCase());
+                const res = await response.json();
+                this.setState({
+                    apiResponse: [...this.state.apiResponse, ...res.results],
+                    isLoading: false
+                })
             } catch (error) {
                 this.setState({
                     error
@@ -71,39 +69,15 @@ class Section extends React.Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         this.props.handleSwitchOn(this.props.location.pathname);
-        this.setState({
-            isLoading: true
-        })
-        const results = await this.callApi();
-        try {
-            if (this.props.checked) {
-                this.setState({
-                    apiResponse: [...this.state.apiResponse, ...results[0].response.results],
-                    isLoading: false
-                })
-            } else {
-                this.setState({
-                    apiResponse: [...this.state.apiResponse, ...results[0].results],
-                    isLoading: false
-                })
-            }
-        } catch (error) {
-            this.setState({
-                error
-            });
-        }
-    }
-
-    componentWillUnmount() {
         this.callApi();
     }
 
-    handleClose() {
-        this.setState(state => ({
+    handleClose = () => {
+        this.setState({
             show: false
-        }));
+        });
     }
 
     handleShow = (item) => (e) => {
@@ -186,7 +160,7 @@ class Section extends React.Component {
                         let url = item?.multimedia ? item?.multimedia[0]?.url : 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
                         let section;
                         if (item.section.toLowerCase() !== 'business' && item.section.toLowerCase() !== 'technology' && item.section.toLowerCase() !== 'health' && item.section.toLowerCase() !== 'sports' && item.section.toLowerCase() !== 'politics' && item.section.toLowerCase() !== 'world') {
-                            section = 'default-badge'; 
+                            section = 'default-badge';
                         }
                         return <Card key={i} onClick={this.handleClick(item)} className='horizontal-card'>
                             <Card.Body className="mid-card">
@@ -207,7 +181,7 @@ class Section extends React.Component {
                                 </Container>
                             </Card.Body>
                         </Card>
-                    })                    
+                    })
                 }
                 <Modal show={this.state.show} onHide={this.handleClose} >
                     <Modal.Header closeButton>
@@ -216,13 +190,13 @@ class Section extends React.Component {
                     <Modal.Body>
                         <h4 className='share-title-modal'>Share via</h4>
                         <div className='share-icon-modal'>
-                            <FacebookShareButton url={this.state.obj.source === 'The New York Times' ? this.state.obj.web_url :this.state.obj.webUrl} hashtag='#CS_571_NewsApp'>
+                            <FacebookShareButton url={this.state.obj.source === 'The New York Times' ? this.state.obj.web_url : this.state.obj.webUrl} hashtag='#CS_571_NewsApp'>
                                 <FacebookIcon size={64} round />
                             </FacebookShareButton>
-                            <TwitterShareButton url={this.state.obj.source === 'The New York Times' ? this.state.obj.web_url :this.state.obj.webUrl} hashtags={['CSCI_571_NewsApp']}>
+                            <TwitterShareButton url={this.state.obj.source === 'The New York Times' ? this.state.obj.web_url : this.state.obj.webUrl} hashtags={['CSCI_571_NewsApp']}>
                                 <TwitterIcon size={64} round />
                             </TwitterShareButton>
-                            <EmailShareButton url={this.state.obj.source === 'The New York Times' ? this.state.obj.web_url :this.state.obj.webUrl} subject='#CS_571_NewsApp'>
+                            <EmailShareButton url={this.state.obj.source === 'The New York Times' ? this.state.obj.web_url : this.state.obj.webUrl} subject='#CS_571_NewsApp'>
                                 <EmailIcon size={64} round />
                             </EmailShareButton>
                         </div>

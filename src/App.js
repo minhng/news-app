@@ -8,12 +8,10 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Switch from "react-switch";
 import Container from 'react-bootstrap/Container';
 import _ from 'lodash';
-
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 
 import { Route, withRouter } from 'react-router-dom';
-
 
 import './App.css';
 import Home from './components/Home';
@@ -54,17 +52,12 @@ class App extends React.Component {
             isSwitchable: true,
             checked: localStorage.getItem('checked') === 'true' ? true : false,
         };
-        this.handleResultSelect = this.handleResultSelect.bind(this);
-        this.bookmark = this.bookmark.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSwitchOn = this.handleSwitchOn.bind(this);
-        this.handleSwitchOff = this.handleSwitchOff.bind(this);
     }
 
     handleResultSelect = (selected) => {
         if (selected.label !== '') {
-            let obj ={value: selected.value, label: selected.label};
-            this.setState({values: obj});
+            let obj = { value: selected.value, label: selected.label };
+            this.setState({ values: obj });
             this.props.history.push({
                 pathname: '/search',
                 search: '?q=' + selected.label,
@@ -79,7 +72,7 @@ class App extends React.Component {
         this.props.history.push('/favorites');
     }
 
-    handleChange(checked) {
+    handleChange = (checked) => {
         localStorage.setItem('checked', checked);
         this.setState({ checked });
     }
@@ -100,7 +93,6 @@ class App extends React.Component {
         }
     }
 
-
     render() {
         return (
             <div>
@@ -110,9 +102,9 @@ class App extends React.Component {
                             defaultOptions={[{ label: "No match" }]}
                             loadOptions={_.debounce(promiseOptions, 1000, {
                                 leading: true
-                              })}
+                            })}
                             placeholder={'Enter keyword...'}
-                            value={this.props.location.pathname==='/search' ? this.state.values : ''}
+                            value={this.props.location.pathname === '/search' ? this.state.values : ''}
                             onChange={this.handleResultSelect}
                         />
                     </div>
@@ -133,9 +125,9 @@ class App extends React.Component {
                                 overlay={
                                     <Tooltip>
                                         Bookmark
-                                </Tooltip>
+                                    </Tooltip>
                                 }>
-                                {this.props.location.pathname==='/favorites' ?
+                                {this.props.location.pathname === '/favorites' ?
                                     <FontAwesomeIcon onClick={this.bookmark(this.state.apiResponse)} size='1x' style={{ marginRight: 10, cursor: 'pointer', color: 'white', height: 1 + 'em' }} icon={faBookmarked} /> :
                                     <FontAwesomeIcon onClick={this.bookmark(this.state.apiResponse)} size='1x' style={{ marginRight: 10, cursor: 'pointer', color: 'white', height: 1 + 'em' }} icon={faBookmark} />
                                 }
@@ -165,31 +157,58 @@ class App extends React.Component {
                 </Navbar>
                 <div>
                     <Route exact path="/"
-                        component={(routeProps) => <Container fluid><Home checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} /></Container>}
+                        component={(routeProps) => 
+                            <Container fluid>
+                                <Home checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} />
+                            </Container>}
                     />
                     <Route exact path="/World"
-                        component={(routeProps) => <Container fluid><Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} /></Container>}
+                        component={(routeProps) => 
+                            <Container fluid>
+                                <Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} />
+                            </Container>}
                     />
                     <Route exact path="/Politics"
-                        component={(routeProps) => <Container fluid><Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} /></Container>}
+                        component={(routeProps) => 
+                            <Container fluid>
+                                <Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} />
+                            </Container>}
                     />
                     <Route exact path="/Business"
-                        component={(routeProps) => <Container fluid><Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} /></Container>}
+                        component={(routeProps) => 
+                            <Container fluid>
+                                <Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} />
+                            </Container>}
                     />
                     <Route exact path="/Technology"
-                        component={(routeProps) => <Container fluid><Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} /></Container>}
+                        component={(routeProps) => 
+                            <Container fluid>
+                                <Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} />
+                            </Container>}
                     />
                     <Route exact path="/Sports"
-                        component={(routeProps) => <Container fluid><Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} /></Container>}
+                        component={(routeProps) => 
+                            <Container fluid>
+                                <Section checked={this.state.checked} handleSwitchOn={this.handleSwitchOn} {...routeProps} />
+                            </Container>}
                     />
                     <Route exact path="/article"
-                        component={(routeProps) => <Container fluid><Detailed checked={this.state.checked} handleSwitchOff={this.handleSwitchOff} {...routeProps} /></Container>}
+                        component={(routeProps) => 
+                            <Container fluid>
+                                <Detailed checked={this.state.checked} handleSwitchOff={this.handleSwitchOff} {...routeProps} />
+                            </Container>}
                     />
                     <Route exact path="/search"
-                        component={(routeProps) => <Container fluid><Results checked={this.state.checked} handleSwitchOff={this.handleSwitchOff} handleResetValue={this.handleResultSelect} {...routeProps} /></Container>}
+                        component={(routeProps) => 
+                        <Container fluid>
+                            <Results checked={this.state.checked} handleSwitchOff={this.handleSwitchOff} handleResetValue={this.handleResultSelect} {...routeProps} />
+                        </Container>}
                     />
                     <Route exact path="/favorites"
-                        component={(routeProps) => <Container fluid><Favorites checked={this.state.checked} handleSwitchOff={this.handleSwitchOff} {...routeProps} /></Container>}
+                        component={(routeProps) => 
+                            <Container fluid>
+                                <Favorites checked={this.state.checked} handleSwitchOff={this.handleSwitchOff} {...routeProps} />
+                            </Container>}
                     />
                 </div>
             </div>
